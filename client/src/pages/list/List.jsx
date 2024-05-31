@@ -27,7 +27,7 @@ const List = () => {
     if (destination) query += `city=${destination}&`;
     if (min) query += `min=${min}&`;
     if (max) query += `max=${max}&`;
-    reFetch(query.slice(0, -1)); // Remove trailing '&'
+    reFetch(query.slice(0, -1));
   };
 
   useEffect(() => {
