@@ -1,15 +1,14 @@
 {
-    "name": "cdweb-project",
-    "version": "1.0.0",
-    "engines": {
-      "node": "16.x"
-    },
-    "scripts": {
-      "postinstall": "cd client && npm install && npm run build && cd ../api && npm install",
-      "start": "node api/index.js"
-    },
-    "dependencies": {
-      "concurrently": "^5.0.0"
-    }
+  "name": "cdweb-project",
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "cd client && npm install && npm run build && cd ../api && npm install",
+    "start": "node api/index.js"
+  },
+  "dependencies": {
+    "concurrently": "^5.0.0"
+  },
+  "engines": {
+    "node": "16.x"
   }
-  
+}
