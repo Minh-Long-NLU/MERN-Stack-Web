@@ -11,10 +11,10 @@ import useFetch from "../../hooks/useFetch";
 
 const List = () => {
   const location = useLocation();
-  const [destination, setDestination] = useState(location.state.destination);
-  const [date, setDate] = useState(location.state.date);
+  const [destination, setDestination] = useState(location.state?.destination || "");
+  const [date, setDate] = useState(location.state?.date || [{ startDate: new Date(), endDate: new Date(), key: 'selection' }]);
   const [openDate, setOpenDate] = useState(false);
-  const [options, setOptions] = useState(location.state.options);
+  const [options, setOptions] = useState(location.state?.options || { adult: 1, children: 0, room: 1 });
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(999);
 
@@ -23,12 +23,16 @@ const List = () => {
   );
 
   const handleSearch = () => {
-    reFetch();
+    let query = "/hotels?";
+    if (destination) query += `city=${destination}&`;
+    if (min) query += `min=${min}&`;
+    if (max) query += `max=${max}&`;
+    reFetch(query.slice(0, -1)); // Remove trailing '&'
   };
 
   useEffect(() => {
     reFetch();
-  }, [destination, date, options, min, max]);
+  }, []);
 
   return (
     <div>
@@ -41,8 +45,9 @@ const List = () => {
             <div className="lsItem">
               <label>Destination</label>
               <input
-                placeholder={destination}
+                placeholder="Destination"
                 type="text"
+                value={destination}
                 onChange={(e) => setDestination(e.target.value)}
               />
             </div>
@@ -70,6 +75,7 @@ const List = () => {
                   <input
                     type="number"
                     className="lsOptionInput"
+                    value={min}
                     onChange={(e) => setMin(e.target.value)}
                   />
                 </div>
@@ -80,6 +86,7 @@ const List = () => {
                   <input
                     type="number"
                     className="lsOptionInput"
+                    value={max}
                     onChange={(e) => setMax(e.target.value)}
                   />
                 </div>
@@ -129,12 +136,16 @@ const List = () => {
           <div className="listResult">
             {loading ? (
               "Loading, please wait!"
+            ) : error ? (
+              <p>Error: {error.message}</p>
             ) : (
-              <>
-                {data.map((item) => (
+              Array.isArray(data) && data.length > 0 ? (
+                data.map((item) => (
                   <SearchItem item={item} key={item._id} />
-                ))}
-              </>
+                ))
+              ) : (
+                <p>No results found</p>
+              )
             )}
           </div>
         </div>
